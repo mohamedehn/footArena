@@ -9,7 +9,7 @@ import java.util.UUID;
 public class Invoice {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     @Column(name = "payment_method", nullable = false)

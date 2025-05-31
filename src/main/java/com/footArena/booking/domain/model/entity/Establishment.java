@@ -14,7 +14,7 @@ import java.util.UUID;
 public class Establishment {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     @Column(name = "name", nullable = false)
@@ -45,13 +45,11 @@ public class Establishment {
     public Establishment() {
     }
 
-    public Establishment(String name, String address, String phone, String email, Date createdAt, Date updatedAt) {
+    public Establishment(String name, String address, String phone, String email) {
         this.name = name;
         this.address = address;
         this.phone = phone;
         this.email = email;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
     }
 
     public UUID getId() {
@@ -108,6 +106,24 @@ public class Establishment {
 
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public List<Field> getFields() {
+        return fields;
+    }
+
+    public void setFields(List<Field> fields) {
+        this.fields = fields;
+    }
+
+    public void addField(Field field) {
+        fields.add(field);
+        field.setEstablishment(this);
+    }
+
+    public void removeField(Field field) {
+        fields.remove(field);
+        field.setEstablishment(null);
     }
 
 }

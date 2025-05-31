@@ -1,6 +1,8 @@
 package com.footArena.booking.api.dto;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 public class EstablishmentDTO {
@@ -12,11 +14,12 @@ public class EstablishmentDTO {
     private String phone;
     private Date createdAt;
     private Date updatedAt;
+    private List<FieldDTO> fields = new ArrayList<>();
 
     public EstablishmentDTO() {
     }
 
-    public EstablishmentDTO(UUID id, String name, String address, String email, String phone, Date createdAt, Date updatedAt) {
+    public EstablishmentDTO(UUID id, String name, String address, String email, String phone, Date createdAt, Date updatedAt, List<FieldDTO> fields) {
         this.id = id;
         this.name = name;
         this.address = address;
@@ -24,6 +27,7 @@ public class EstablishmentDTO {
         this.phone = phone;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+        this.fields = fields;
     }
 
     public UUID getId() {
@@ -80,6 +84,27 @@ public class EstablishmentDTO {
 
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public List<FieldDTO> getFields() {
+        return fields;
+    }
+
+    public void setFields(List<FieldDTO> fields) {
+        this.fields = fields;
+    }
+
+    public void addField(FieldDTO field) {
+        if (this.fields == null) {
+            this.fields = new ArrayList<>();
+        }
+        this.fields.add(field);
+    }
+
+    public void removeField(FieldDTO field) {
+        if (this.fields != null) {
+            this.fields.remove(field);
+        }
     }
 
 }
