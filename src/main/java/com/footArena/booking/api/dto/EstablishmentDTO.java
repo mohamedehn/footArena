@@ -1,5 +1,6 @@
 package com.footArena.booking.api.dto;
 
+import java.util.Date;
 import java.util.UUID;
 
 public class EstablishmentDTO {
@@ -9,16 +10,20 @@ public class EstablishmentDTO {
     private String address;
     private String email;
     private String phone;
+    private Date createdAt;
+    private Date updatedAt;
 
     public EstablishmentDTO() {
     }
 
-    public EstablishmentDTO(UUID id, String name, String address, String email, String phone) {
+    public EstablishmentDTO(UUID id, String name, String address, String email, String phone, Date createdAt, Date updatedAt) {
         this.id = id;
         this.name = name;
         this.address = address;
         this.email = email;
         this.phone = phone;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 
     public UUID getId() {
@@ -59,6 +64,22 @@ public class EstablishmentDTO {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Date getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Date updatedAt) {
+        this.updatedAt = updatedAt;
     }
 
 }

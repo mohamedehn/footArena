@@ -1,9 +1,6 @@
 package com.footArena.booking.domain.model.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import java.util.UUID;
 
@@ -15,10 +12,13 @@ public class BlacklistedToken {
     @GeneratedValue
     private UUID id;
 
+    @Column(nullable = false, name = "token", length = 500)
     private String token;
 
+    @Column(nullable = false, name = "blacklisted_at")
     private java.time.LocalDateTime blacklistedAt;
 
+    @Column(nullable = false, name = "expires_at")
     private java.time.LocalDateTime expiresAt;
 
     public BlacklistedToken() {

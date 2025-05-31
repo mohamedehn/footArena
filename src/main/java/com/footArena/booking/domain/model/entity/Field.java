@@ -11,14 +11,19 @@ public class Field {
     @GeneratedValue
     private UUID id;
 
+    @Column(name = "name", nullable = false)
     private String name;
 
+    @Column(name = "location", nullable = false)
     private String location;
 
+    @Column(name = "surface_type", nullable = false)
     private String surfaceType;
 
+    @Column(name = "capacity", nullable = false)
     private int capacity;
 
+    @Column(name = "available", nullable = false)
     private boolean available;
 
     @ManyToOne

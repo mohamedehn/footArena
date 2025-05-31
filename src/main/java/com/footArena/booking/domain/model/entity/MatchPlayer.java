@@ -13,11 +13,14 @@ public class MatchPlayer {
     private UUID id;
 
     @ManyToOne
+    @JoinColumn(name = "match_id", nullable = false)
     private Match match;
 
     @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @Column(name = "team", nullable = false)
     private String team;
 
     public MatchPlayer() {

@@ -12,18 +12,24 @@ public class Invoice {
     @GeneratedValue
     private UUID id;
 
+    @Column(name = "payment_method", nullable = false)
     private String paymentMethod;
 
+    @Column(name = "status", nullable = false)
     private String status;
 
+    @Column(name = "stripe_session_id", nullable = false)
     private String stripeSessionId;
 
+    @Column(name = "amount", nullable = false)
     private double amount;
 
     @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @ManyToOne
+    @JoinColumn(name = "match_id", nullable = false)
     private Match match;
 
     private java.time.LocalDateTime issuedAt;

@@ -14,23 +14,32 @@ public class Match {
     private UUID id;
 
     @ManyToOne
+    @JoinColumn(name = "field_id", nullable = false)
     private Field field;
 
+    @Column(name = "type", nullable = false)
     private String type;
 
+    @Column(name = "level", nullable = false)
     private String level;
 
+    @Column(name = "is_public", nullable = false)
     private boolean isPublic;
 
+    @Column(name = "is_full", nullable = false)
     private boolean isFull;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "match_status", nullable = false)
     private MatchStatus matchStatus;
 
+    @Column(name = "description")
     private String description;
 
+    @Column(name = "start_date_time", nullable = false)
     private java.time.LocalDateTime startDateTime;
 
+    @Column(name = "end_date_time", nullable = false)
     private java.time.LocalDateTime endDateTime;
 
     public Match() {
