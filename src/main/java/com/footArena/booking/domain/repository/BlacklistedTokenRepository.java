@@ -6,5 +6,7 @@ import com.footArena.booking.domain.model.entity.BlacklistedToken;
 import java.util.UUID;
 
 public interface BlacklistedTokenRepository extends JpaRepository<BlacklistedToken, UUID> {
+    public BlacklistedToken findByUserIdAndIsBlackListed(UUID userId, boolean isBlackListed);
 
+    public BlacklistedToken findByToken(String token);
 }

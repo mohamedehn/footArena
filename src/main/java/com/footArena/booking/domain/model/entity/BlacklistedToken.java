@@ -2,6 +2,7 @@ package com.footArena.booking.domain.model.entity;
 
 import jakarta.persistence.*;
 
+import java.time.Instant;
 import java.util.UUID;
 
 @Entity
@@ -19,15 +20,23 @@ public class BlacklistedToken {
     private java.time.LocalDateTime blacklistedAt;
 
     @Column(nullable = false, name = "expires_at")
-    private java.time.LocalDateTime expiresAt;
+    private Instant expiresAt;
+
+    @Column(nullable = false, name = "user_id")
+    private UUID userId;
+
+    @Column(nullable = false, name = "blacklisted")
+    private boolean blackListed;
 
     public BlacklistedToken() {
     }
 
-    public BlacklistedToken(String token, java.time.LocalDateTime blacklistedAt, java.time.LocalDateTime expiresAt) {
+    public BlacklistedToken(String token, java.time.LocalDateTime blacklistedAt, Instant expiresAt, UUID userId, boolean blackListed) {
         this.token = token;
         this.blacklistedAt = blacklistedAt;
         this.expiresAt = expiresAt;
+        this.userId = userId;
+        this.blackListed = blackListed;
     }
 
     public UUID getId() {
@@ -54,12 +63,28 @@ public class BlacklistedToken {
         this.blacklistedAt = blacklistedAt;
     }
 
-    public java.time.LocalDateTime getExpiresAt() {
+    public Instant getExpiresAt() {
         return expiresAt;
     }
 
-    public void setExpiresAt(java.time.LocalDateTime expiresAt) {
+    public void setExpiresAt(Instant expiresAt) {
         this.expiresAt = expiresAt;
+    }
+
+    public UUID getUserId() {
+        return userId;
+    }
+
+    public void setUserId(UUID userId) {
+        this.userId = userId;
+    }
+
+    public boolean isBlackListed() {
+        return blackListed;
+    }
+
+    public void setBlackListed(boolean blackListed) {
+        this.blackListed = blackListed;
     }
 
 }
