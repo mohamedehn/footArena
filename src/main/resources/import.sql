@@ -1,8 +1,8 @@
 -- Insert establishments
 INSERT INTO establishments (id, name, address, phone, email, created_at, updated_at) VALUES
-  (UUID_TO_BIN('11111111-1111-1111-1111-111111111111'), 'Foot Arena Lyon', '12 rue du sport, Lyon', '0102030405', 'lyon@footarena.com', NOW(), NOW()),
-  (UUID_TO_BIN('22222222-2222-2222-2222-222222222222'), 'Foot Arena Paris', '34 avenue du ballon, Paris', '0203040506', 'paris@footarena.com', NOW(), NOW()),
-  (UUID_TO_BIN('33333333-3333-3333-3333-333333333333'), 'Foot Arena Marseille', '56 route des stades, Marseille', '0304050607', 'marseille@footarena.com', NOW(), NOW());
+  (UUID_TO_BIN('11111111-1111-1111-1111-111111111111'), 'Foot Arena Lyon', '12 rue du sport, Lyon', '0102030405', 'lyon@footarena.com', '2021-06-01 12:00:00', '2021-06-01 12:00:00'),
+  (UUID_TO_BIN('22222222-2222-2222-2222-222222222222'), 'Foot Arena Paris', '34 avenue du ballon, Paris', '0203040506', 'paris@footarena.com', '2021-06-01 12:00:00', '2021-06-01 12:00:00'),
+  (UUID_TO_BIN('33333333-3333-3333-3333-333333333333'), 'Foot Arena Marseille', '56 route des stades, Marseille', '0304050607', 'marseille@footarena.com', '2021-06-01 12:00:00', '2021-06-01 12:00:00');
 
 -- Insert fields
 INSERT INTO fields (id, name, location, surface_type, capacity, available, establishment_id) VALUES
