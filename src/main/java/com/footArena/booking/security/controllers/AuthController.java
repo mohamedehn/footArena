@@ -1,5 +1,7 @@
 package com.footArena.booking.security.controllers;
 
+import com.footArena.booking.api.dto.UserDTO;
+import com.footArena.booking.api.mapper.UserMapper;
 import com.footArena.booking.domain.model.entity.User;
 import com.footArena.booking.domain.model.enums.Role;
 import com.footArena.booking.domain.repository.UserRepository;
@@ -95,7 +97,10 @@ public class AuthController {
 
     @PostMapping("/login")
     @ResponseStatus(OK)
-    public ResponseEntity<String> authenticateUser(@RequestBody LoginDTO loginDTO, HttpServletResponse response, HttpServletRequest request) {
+    public ResponseEntity<UserDTO> authenticateUser(@RequestBody LoginDTO loginDTO, HttpServletResponse response, HttpServletRequest request) {
+        System.out.println("Login attempt with email: " + loginDTO.getEmail());
+        System.out.println("response" + response);
+        System.out.println("request" + request);
         if (isNull(loginDTO.getEmail()) || isNull(loginDTO.getPassword())) {
             throw new ResponseStatusException(BAD_REQUEST, "Email and password cannot be empty");
         }
@@ -119,7 +124,8 @@ public class AuthController {
             throw new ResponseStatusException(UNAUTHORIZED, "User not found with provided credentials");
         }
 
-        return ResponseEntity.ok("User logged in successfully");
+        //return ResponseEntity.ok("User logged in successfully");
+        return new ResponseEntity<>(UserMapper.MappedUserToDto(user), OK);
     }
 
 }
