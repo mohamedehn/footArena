@@ -11,6 +11,8 @@ import com.footArena.booking.security.services.TokenService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -33,6 +35,8 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final TokenService tokenService;
     private final BlackListTokenService blackListTokenService;
+    private static final Logger log = LoggerFactory.getLogger(AuthController.class);
+
 
     public AuthController(UserRepository userRepository, AuthenticationManager authenticationManager,
                           TokenService tokenService, BlackListTokenService blackListTokenService) {
@@ -97,35 +101,33 @@ public class AuthController {
 
     @PostMapping("/login")
     @ResponseStatus(OK)
-    public ResponseEntity<UserDTO> authenticateUser(@RequestBody LoginDTO loginDTO, HttpServletResponse response, HttpServletRequest request) {
-        System.out.println("Login attempt with email: " + loginDTO.getEmail());
-        System.out.println("response" + response);
-        System.out.println("request" + request);
+    public ResponseEntity<?> authenticateUser(@RequestBody LoginDTO loginDTO, HttpServletResponse response, HttpServletRequest request) {
         if (isNull(loginDTO.getEmail()) || isNull(loginDTO.getPassword())) {
             throw new ResponseStatusException(BAD_REQUEST, "Email and password cannot be empty");
         }
-
         if(checkCookieToken(request)) {
             tokenService.isTokenValidAndNotExpired(request.getHeader("AuthToken"));
         }
 
-        Authentication authentication = this.authenticationManager
-                .authenticate(new UsernamePasswordAuthenticationToken(loginDTO.getEmail(), loginDTO.getPassword()));
-        var jwt = tokenService.generateToken(authentication);
-        if (isNull(jwt)) {
-            throw new ResponseStatusException(UNAUTHORIZED, "Invalid email or password");
+        try {
+            Authentication authentication = this.authenticationManager
+                    .authenticate(new UsernamePasswordAuthenticationToken(loginDTO.getEmail(), loginDTO.getPassword()));
+
+            var jwt = tokenService.generateToken(authentication);
+            generateCookie(jwt, response, 60 * 60 * 24);
+            getContext().setAuthentication(authentication);
+
+            User user = this.userRepository.findByEmail(loginDTO.getEmail());
+            if (isNull(user)) {
+                throw new ResponseStatusException(UNAUTHORIZED, "User not found with provided credentials");
+            }
+
+            return new ResponseEntity<>("User logged in successfully", OK);
+
+        } catch (Exception ex) {
+            log.warn("Authentication failed for user: {}", loginDTO.getEmail(), ex);
+            throw new ResponseStatusException(UNAUTHORIZED, "Invalid credentials");
         }
-        generateCookie(jwt, response, 60 * 60 * 24); // 1 day
-        getContext().setAuthentication(authentication);
-
-        User user = this.userRepository.findByEmail(loginDTO.getEmail());
-
-        if (isNull(user)) {
-            throw new ResponseStatusException(UNAUTHORIZED, "User not found with provided credentials");
-        }
-
-        //return ResponseEntity.ok("User logged in successfully");
-        return new ResponseEntity<>(UserMapper.MappedUserToDto(user), OK);
     }
 
 }

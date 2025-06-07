@@ -3,6 +3,7 @@ package com.footArena.booking.domain.model.entity;
 import jakarta.persistence.*;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -13,11 +14,11 @@ public class BlacklistedToken {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(nullable = false, name = "token", length = 500)
+    @Column(nullable = false, name = "token", length = Integer.MAX_VALUE)
     private String token;
 
     @Column(nullable = false, name = "blacklisted_at")
-    private java.time.LocalDateTime blacklistedAt;
+    private LocalDateTime blacklistedAt;
 
     @Column(nullable = false, name = "expires_at")
     private Instant expiresAt;
@@ -31,7 +32,7 @@ public class BlacklistedToken {
     public BlacklistedToken() {
     }
 
-    public BlacklistedToken(String token, java.time.LocalDateTime blacklistedAt, Instant expiresAt, UUID userId, boolean isBlackListed) {
+    public BlacklistedToken(String token, LocalDateTime blacklistedAt, Instant expiresAt, UUID userId, boolean isBlackListed) {
         this.token = token;
         this.blacklistedAt = blacklistedAt;
         this.expiresAt = expiresAt;
@@ -55,11 +56,11 @@ public class BlacklistedToken {
         this.token = token;
     }
 
-    public java.time.LocalDateTime getBlacklistedAt() {
+    public LocalDateTime getBlacklistedAt() {
         return blacklistedAt;
     }
 
-    public void setBlacklistedAt(java.time.LocalDateTime blacklistedAt) {
+    public void setBlacklistedAt(LocalDateTime blacklistedAt) {
         this.blacklistedAt = blacklistedAt;
     }
 

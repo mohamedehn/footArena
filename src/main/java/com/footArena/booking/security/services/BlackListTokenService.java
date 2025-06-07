@@ -9,6 +9,7 @@ import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -68,6 +69,7 @@ public class BlackListTokenService {
         blacklistedToken.setToken(token);
         blacklistedToken.setExpiresAt(expiryDate);
         blacklistedToken.setUserId(userId);
+        blacklistedToken.setBlacklistedAt(LocalDateTime.now());
         blacklistedToken.setBlackListed(false);
         blacklistedTokenRepository.save(blacklistedToken);
     }
