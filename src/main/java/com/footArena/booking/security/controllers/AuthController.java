@@ -1,7 +1,5 @@
 package com.footArena.booking.security.controllers;
 
-import com.footArena.booking.api.dto.UserDTO;
-import com.footArena.booking.api.mapper.UserMapper;
 import com.footArena.booking.domain.model.entity.User;
 import com.footArena.booking.domain.model.enums.Role;
 import com.footArena.booking.domain.repository.UserRepository;
@@ -46,11 +44,11 @@ public class AuthController {
         this.blackListTokenService = blackListTokenService;
     }
 
-    private void generateCookie(String jwt, HttpServletResponse response, int expirationTime) {
+    private void generateCookie(String jwt, HttpServletResponse response) {
         Cookie cookie = new Cookie("AuthToken", jwt);
         cookie.setHttpOnly(false); // TODO: Set to true for security in production, false for testing
         cookie.setPath("/");
-        cookie.setMaxAge(expirationTime); // 1 day
+        cookie.setMaxAge(86400); // 1 day in seconds
         response.addCookie(cookie);
     }
 
@@ -80,23 +78,32 @@ public class AuthController {
 
     @PostMapping("/register")
     @ResponseStatus(CREATED)
-    public User registerUser(@RequestBody User user) {
+    public ResponseEntity<?> registerUser(@RequestBody User user) {
         Role role = Role.PLAYER;
 
         if ((isNull(user.getFirstName()) || user.getFirstName().isEmpty()) ||
                 (isNull(user.getLastName()) || user.getLastName().isEmpty()) || user.getPassword().length() < 6) {
-            throw new ResponseStatusException(BAD_REQUEST, "First name and last name cannot be empty, and password must be at least 6 characters long");
+            throw new ResponseStatusException(BAD_REQUEST, "You must provide all required fields.");
+        }
+
+        if (isNull(user.getEmail()) || user.getEmail().isEmpty() || isNull(user.getPassword()) || user.getPassword().isEmpty()) {
+            throw new ResponseStatusException(BAD_REQUEST, "Email and password cannot be empty");
         }
 
         if (userRepository.existsByEmail(user.getEmail())) {
             throw new ResponseStatusException(CONFLICT, "User with this email already exists");
         }
 
+        System.out.println("here");
+
         PasswordEncoder passwordEncoder = createDelegatingPasswordEncoder();
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setEnabled(true);
         user.setRole(role);
 
-        return this.userRepository.save(user);
+        this.userRepository.save(user);
+
+        return new ResponseEntity<>("User registered successfully", CREATED);
     }
 
     @PostMapping("/login")
@@ -114,7 +121,7 @@ public class AuthController {
                     .authenticate(new UsernamePasswordAuthenticationToken(loginDTO.getEmail(), loginDTO.getPassword()));
 
             var jwt = tokenService.generateToken(authentication);
-            generateCookie(jwt, response, 60 * 60 * 24);
+            generateCookie(jwt, response);
             getContext().setAuthentication(authentication);
 
             User user = this.userRepository.findByEmail(loginDTO.getEmail());

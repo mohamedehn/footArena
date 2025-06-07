@@ -10,17 +10,19 @@ public class UserDTO {
     private String firstName;
     private String lastName;
     private String email;
+    private Boolean enabled;
     private Role role;
 
     public UserDTO() {
     }
 
-    public UserDTO(UUID id, String firstName, String lastName, String email, Role role) {
+    public UserDTO(UUID id, String firstName, String lastName, String email, Role role, Boolean enabled) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.role = role;
+        this.enabled = enabled;
     }
 
     public UUID getId() {
@@ -61,6 +63,14 @@ public class UserDTO {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    public Boolean getEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
     }
 
 }
