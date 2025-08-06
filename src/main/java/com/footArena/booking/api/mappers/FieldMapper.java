@@ -1,7 +1,7 @@
-package com.footArena.booking.api.mapper;
+package com.footArena.booking.api.mappers;
 
 import com.footArena.booking.api.dto.FieldDTO;
-import com.footArena.booking.domain.model.entity.Field;
+import com.footArena.booking.domain.entities.Field;
 
 public class FieldMapper {
     public static FieldDTO MappedFieldToDto(Field field) {

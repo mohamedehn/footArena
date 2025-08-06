@@ -1,7 +1,7 @@
-package com.footArena.booking.api.mapper;
+package com.footArena.booking.api.mappers;
 
 import com.footArena.booking.api.dto.MatchDTO;
-import com.footArena.booking.domain.model.entity.Match;
+import com.footArena.booking.domain.entities.Match;
 
 public class MatchMapper {
     public static MatchDTO MappedMatchToDto(Match match) {

@@ -1,9 +1,9 @@
 package com.footArena.booking.security.services;
 
-import com.footArena.booking.domain.model.entity.BlacklistedToken;
-import com.footArena.booking.domain.model.entity.User;
-import com.footArena.booking.domain.repository.BlacklistedTokenRepository;
-import com.footArena.booking.domain.repository.UserRepository;
+import com.footArena.booking.domain.entities.BlacklistedToken;
+import com.footArena.booking.domain.entities.User;
+import com.footArena.booking.domain.repositories.BlacklistedTokenRepository;
+import com.footArena.booking.domain.repositories.UserRepository;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.jwt.*;
 import org.springframework.security.core.GrantedAuthority;

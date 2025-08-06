@@ -1,12 +1,11 @@
-package com.footArena.booking.api.mapper;
+package com.footArena.booking.api.mappers;
 
 import com.footArena.booking.api.dto.EstablishmentDTO;
 import com.footArena.booking.api.dto.FieldDTO;
-import com.footArena.booking.domain.model.entity.Establishment;
-import com.footArena.booking.domain.model.entity.Field;
+import com.footArena.booking.domain.entities.Establishment;
+import com.footArena.booking.domain.entities.Field;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class EstablishmentMapper {
     public static EstablishmentDTO MappedEstablishmentToDto(Establishment establishment) {

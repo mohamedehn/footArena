@@ -1,7 +1,7 @@
-package com.footArena.booking.api.mapper;
+package com.footArena.booking.api.mappers;
 
 import com.footArena.booking.api.dto.InvoiceDTO;
-import com.footArena.booking.domain.model.entity.Invoice;
+import com.footArena.booking.domain.entities.Invoice;
 
 public class InvoiceMapper {
     public static InvoiceDTO MappedInvoiceToDto(Invoice invoice) {

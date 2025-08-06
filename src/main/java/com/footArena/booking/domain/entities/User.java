@@ -1,6 +1,6 @@
-package com.footArena.booking.domain.model.entity;
+package com.footArena.booking.domain.entities;
 
-import com.footArena.booking.domain.model.enums.Role;
+import com.footArena.booking.domain.enums.Role;
 import jakarta.persistence.*;
 
 import java.util.UUID;

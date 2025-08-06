@@ -1,7 +1,7 @@
-package com.footArena.booking.domain.repository;
+package com.footArena.booking.domain.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import com.footArena.booking.domain.model.entity.BlacklistedToken;
+import com.footArena.booking.domain.entities.BlacklistedToken;
 
 import java.util.UUID;
 

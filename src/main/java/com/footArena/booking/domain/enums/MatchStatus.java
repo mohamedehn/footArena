@@ -1,4 +1,4 @@
-package com.footArena.booking.domain.model.enums;
+package com.footArena.booking.domain.enums;
 
 public enum MatchStatus {
     PENDING,

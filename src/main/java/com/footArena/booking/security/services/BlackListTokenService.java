@@ -1,7 +1,7 @@
 package com.footArena.booking.security.services;
 
-import com.footArena.booking.domain.model.entity.BlacklistedToken;
-import com.footArena.booking.domain.repository.BlacklistedTokenRepository;
+import com.footArena.booking.domain.entities.BlacklistedToken;
+import com.footArena.booking.domain.repositories.BlacklistedTokenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.oauth2.jwt.Jwt;

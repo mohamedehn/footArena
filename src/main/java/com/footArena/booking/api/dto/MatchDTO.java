@@ -1,6 +1,6 @@
 package com.footArena.booking.api.dto;
 
-import com.footArena.booking.domain.model.enums.MatchStatus;
+import com.footArena.booking.domain.enums.MatchStatus;
 
 import java.time.LocalDateTime;
 import java.util.UUID;

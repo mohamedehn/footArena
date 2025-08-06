@@ -1,7 +1,7 @@
-package com.footArena.booking.api.mapper;
+package com.footArena.booking.api.mappers;
 
 import com.footArena.booking.api.dto.UserDTO;
-import com.footArena.booking.domain.model.entity.User;
+import com.footArena.booking.domain.entities.User;
 
 public class UserMapper {
     public static UserDTO MappedUserToDto(User user) {

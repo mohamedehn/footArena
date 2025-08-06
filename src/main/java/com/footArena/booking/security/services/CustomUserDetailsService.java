@@ -1,7 +1,7 @@
 package com.footArena.booking.security.services;
 
-import com.footArena.booking.domain.model.entity.User;
-import com.footArena.booking.domain.repository.UserRepository;
+import com.footArena.booking.domain.entities.User;
+import com.footArena.booking.domain.repositories.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

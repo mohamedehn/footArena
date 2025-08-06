@@ -1,8 +1,8 @@
 package com.footArena.booking.security.controllers;
 
-import com.footArena.booking.domain.model.entity.User;
-import com.footArena.booking.domain.model.enums.Role;
-import com.footArena.booking.domain.repository.UserRepository;
+import com.footArena.booking.domain.entities.User;
+import com.footArena.booking.domain.enums.Role;
+import com.footArena.booking.domain.repositories.UserRepository;
 import com.footArena.booking.security.dto.LoginDTO;
 import com.footArena.booking.security.services.BlackListTokenService;
 import com.footArena.booking.security.services.TokenService;

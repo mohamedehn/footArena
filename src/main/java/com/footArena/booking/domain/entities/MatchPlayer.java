@@ -1,4 +1,4 @@
-package com.footArena.booking.domain.model.entity;
+package com.footArena.booking.domain.entities;
 
 import jakarta.persistence.*;
 

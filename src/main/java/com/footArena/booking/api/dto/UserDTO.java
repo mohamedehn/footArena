@@ -1,6 +1,6 @@
 package com.footArena.booking.api.dto;
 
-import com.footArena.booking.domain.model.enums.Role;
+import com.footArena.booking.domain.enums.Role;
 
 import java.util.UUID;
 

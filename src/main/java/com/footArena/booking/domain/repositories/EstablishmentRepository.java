@@ -1,6 +1,6 @@
-package com.footArena.booking.domain.repository;
+package com.footArena.booking.domain.repositories;
 
-import com.footArena.booking.domain.model.entity.Establishment;
+import com.footArena.booking.domain.entities.Establishment;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.UUID;
