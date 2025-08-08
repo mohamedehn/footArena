@@ -1,30 +1,50 @@
 package com.footArena.booking.api.mappers;
 
-import com.footArena.booking.api.dto.FieldDTO;
+import com.footArena.booking.api.dto.response.FieldResponse;
 import com.footArena.booking.domain.entities.Field;
+import org.springframework.stereotype.Component;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Component
 public class FieldMapper {
-    public static FieldDTO MappedFieldToDto(Field field) {
-        FieldDTO fieldDTO = new FieldDTO();
-        fieldDTO.setId(field.getId());
-        fieldDTO.setName(field.getName());
-        fieldDTO.setLocation(field.getLocation());
-        fieldDTO.setSurfaceType(field.getSurfaceType());
-        fieldDTO.setCapacity(field.getCapacity());
-        fieldDTO.setAvailable(field.isAvailable());
-        fieldDTO.setEstablishmentId(field.getEstablishment().getId());
-        return fieldDTO;
+
+    /**
+     * Convertit une entité Field en FieldResponse
+     */
+    public FieldResponse toResponse(Field field) {
+        if (field == null) {
+            return null;
+        }
+
+        FieldResponse response = new FieldResponse();
+        response.setId(field.getId());
+        response.setName(field.getName());
+        response.setLocation(field.getLocation());
+        response.setSurfaceType(field.getSurfaceType());
+        response.setCapacity(field.getCapacity());
+        response.setAvailable(field.isAvailable());
+
+        // Informations de l'établissement
+        if (field.getEstablishment() != null) {
+            response.setEstablishmentId(field.getEstablishment().getId());
+            response.setEstablishmentName(field.getEstablishment().getName());
+        }
+
+        return response;
     }
 
-    public static Field MappedFieldToEntity(FieldDTO fieldDTO) {
-        Field field = new Field();
-        field.setId(fieldDTO.getId());
-        field.setName(fieldDTO.getName());
-        field.setLocation(fieldDTO.getLocation());
-        field.setSurfaceType(fieldDTO.getSurfaceType());
-        field.setCapacity(fieldDTO.getCapacity());
-        field.setAvailable(fieldDTO.isAvailable());
-        // Assuming Establishment is mapped elsewhere -- TODO with service or repository
-        return field;
+    /**
+     * Convertit une liste d'entités Field en liste de FieldResponse
+     */
+    public List<FieldResponse> toResponseList(List<Field> fields) {
+        if (fields == null) {
+            return List.of();
+        }
+
+        return fields.stream()
+                .map(this::toResponse)
+                .collect(Collectors.toList());
     }
 }

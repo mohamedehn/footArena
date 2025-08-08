@@ -31,29 +31,44 @@ spring:
 
 server:
   port: ${SERVER_PORT:8090}
-  servlet:
-    context-path: /api
 
 # Configuration JWT
 jwt:
   secret: ${JWT_SECRET:footarena-super-secret-key-change-in-production}
-  expiration: ${JWT_EXPIRATION:86400} # 24 heures
+  expiration: ${JWT_EXPIRATION:86400}
 
 # Configuration Stripe
 stripe:
   secret-key: ${STRIPE_SECRET_KEY:}
   publishable-key: ${STRIPE_PUBLISHABLE_KEY:}
 
+# Configuration Swagger/OpenAPI
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+    enabled: true
+  swagger-ui:
+    path: /swagger-ui.html
+    enabled: true
+    operationsSorter: method
+    tagsSorter: alpha
+    disable-swagger-default-url: false
+    config-url: /v3/api-docs/swagger-config
+    url: /v3/api-docs
+  show-actuator: false
+  pathsToMatch: "/**"
+  packagesToScan: com.footArena.booking.api.controllers
+
 # Logs
 logging:
   level:
     root: INFO
     com.footArena.booking: DEBUG
+    org.springdoc: DEBUG
     org.springframework.security: DEBUG
     org.springframework.web: DEBUG
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
-    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
 
 ---
 # Profil Development
@@ -69,6 +84,7 @@ spring:
 logging:
   level:
     com.footArena.booking: DEBUG
+    org.springdoc: DEBUG
 
 ---
 # Profil Production
@@ -80,6 +96,10 @@ spring:
     hibernate:
       ddl-auto: validate
     show-sql: false
+
+springdoc:
+  swagger-ui:
+    enabled: false
 
 logging:
   level:
