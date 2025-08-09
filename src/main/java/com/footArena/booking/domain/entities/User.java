@@ -2,7 +2,10 @@ package com.footArena.booking.domain.entities;
 
 import com.footArena.booking.domain.enums.Role;
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -31,6 +34,42 @@ public class User {
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)
     private Role role;
+
+    // Nouveaux champs pour Phase 2
+    @Column(name = "phone_number")
+    private String phoneNumber;
+
+    @Column(name = "profile_picture_url")
+    private String profilePictureUrl;
+
+    @Column(name = "email_verified_at")
+    private LocalDateTime emailVerifiedAt;
+
+    @Column(name = "last_login_at")
+    private LocalDateTime lastLoginAt;
+
+    @Column(name = "created_at", nullable = false, updatable = false)
+    @CreationTimestamp
+    private LocalDateTime createdAt;
+
+    @Column(name = "updated_at")
+    @UpdateTimestamp
+    private LocalDateTime updatedAt;
+
+    @Column(name = "password_reset_token")
+    private String passwordResetToken;
+
+    @Column(name = "password_reset_token_expires_at")
+    private LocalDateTime passwordResetTokenExpiresAt;
+
+    @Column(name = "email_verification_token")
+    private String emailVerificationToken;
+
+    @Column(name = "failed_login_attempts", nullable = false)
+    private int failedLoginAttempts = 0;
+
+    @Column(name = "locked_until")
+    private LocalDateTime lockedUntil;
 
     public User() {
     }
@@ -100,4 +139,130 @@ public class User {
         this.role = role;
     }
 
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public String getProfilePictureUrl() {
+        return profilePictureUrl;
+    }
+
+    public void setProfilePictureUrl(String profilePictureUrl) {
+        this.profilePictureUrl = profilePictureUrl;
+    }
+
+    public LocalDateTime getEmailVerifiedAt() {
+        return emailVerifiedAt;
+    }
+
+    public void setEmailVerifiedAt(LocalDateTime emailVerifiedAt) {
+        this.emailVerifiedAt = emailVerifiedAt;
+    }
+
+    public LocalDateTime getLastLoginAt() {
+        return lastLoginAt;
+    }
+
+    public void setLastLoginAt(LocalDateTime lastLoginAt) {
+        this.lastLoginAt = lastLoginAt;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public String getPasswordResetToken() {
+        return passwordResetToken;
+    }
+
+    public void setPasswordResetToken(String passwordResetToken) {
+        this.passwordResetToken = passwordResetToken;
+    }
+
+    public LocalDateTime getPasswordResetTokenExpiresAt() {
+        return passwordResetTokenExpiresAt;
+    }
+
+    public void setPasswordResetTokenExpiresAt(LocalDateTime passwordResetTokenExpiresAt) {
+        this.passwordResetTokenExpiresAt = passwordResetTokenExpiresAt;
+    }
+
+    public String getEmailVerificationToken() {
+        return emailVerificationToken;
+    }
+
+    public void setEmailVerificationToken(String emailVerificationToken) {
+        this.emailVerificationToken = emailVerificationToken;
+    }
+
+    public int getFailedLoginAttempts() {
+        return failedLoginAttempts;
+    }
+
+    public void setFailedLoginAttempts(int failedLoginAttempts) {
+        this.failedLoginAttempts = failedLoginAttempts;
+    }
+
+    public LocalDateTime getLockedUntil() {
+        return lockedUntil;
+    }
+
+    public void setLockedUntil(LocalDateTime lockedUntil) {
+        this.lockedUntil = lockedUntil;
+    }
+
+    // Méthodes utilitaires
+    public boolean isEmailVerified() {
+        return emailVerifiedAt != null;
+    }
+
+    public boolean isAccountLocked() {
+        return lockedUntil != null && LocalDateTime.now().isBefore(lockedUntil);
+    }
+
+    public void lockAccount(int minutes) {
+        this.lockedUntil = LocalDateTime.now().plusMinutes(minutes);
+    }
+
+    public void unlockAccount() {
+        this.lockedUntil = null;
+        this.failedLoginAttempts = 0;
+    }
+
+    public void incrementFailedAttempts() {
+        this.failedLoginAttempts++;
+    }
+
+    public void resetFailedAttempts() {
+        this.failedLoginAttempts = 0;
+    }
+
+    public void updateLastLogin() {
+        this.lastLoginAt = LocalDateTime.now();
+    }
+
+    public void verifyEmail() {
+        this.emailVerifiedAt = LocalDateTime.now();
+        this.emailVerificationToken = null;
+    }
+
+    public String getFullName() {
+        return firstName + " " + lastName;
+    }
 }
