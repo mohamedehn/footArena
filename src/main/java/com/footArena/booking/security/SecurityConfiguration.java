@@ -24,8 +24,6 @@ import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
-import static org.springframework.security.config.Customizer.withDefaults;
-
 @Configuration
 @EnableMethodSecurity
 public class SecurityConfiguration {
@@ -46,33 +44,42 @@ public class SecurityConfiguration {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        return http.csrf(AbstractHttpConfigurer::disable)
-                .cors(withDefaults())
-                .authorizeHttpRequests(auth -> {
-                    // Endpoints publics d'authentification
-                    auth.requestMatchers(HttpMethod.POST, "/auth/**").permitAll();
-                    auth.requestMatchers(HttpMethod.GET, "/auth/validate-token").permitAll();
+        return http
+                .csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(auth -> auth
+                        // ========== SWAGGER/DOCUMENTATION ==========
+                        .requestMatchers(
+                                "/swagger-ui/**",
+                                "/swagger-ui.html",
+                                "/v3/api-docs/**",
+                                "/swagger-resources/**",
+                                "/webjars/**"
+                        ).permitAll()
 
-                    // Documentation API - TOUS les patterns Swagger
-                    auth.requestMatchers(
-                            "/swagger-ui/**",
-                            "/swagger-ui.html",
-                            "/v3/api-docs/**",
-                            "/v3/api-docs.yaml",
-                            "/swagger-resources/**",
-                            "/webjars/**"
-                    ).permitAll();
+                        // ========== AUTHENTIFICATION PUBLIQUE ==========
+                        .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/auth/refresh").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/auth/validate").permitAll()
 
-                    // Endpoints de lecture publics (pour développement/test)
-                    auth.requestMatchers(HttpMethod.GET, "/establishments/**").permitAll();
-                    auth.requestMatchers(HttpMethod.GET, "/fields/**").permitAll();
+                        // ========== COMPTES PUBLIQUES ==========
+                        .requestMatchers(HttpMethod.POST, "/account/register").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/account/activate").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/account/resend-verification").permitAll()
 
-                    // Tous les autres endpoints nécessitent une authentification
-                    auth.anyRequest().authenticated();
-                })
-                .oauth2ResourceServer((oauth2) -> oauth2.jwt(withDefaults()))
-                .sessionManagement(sessionManagement -> sessionManagement
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                        // ========== API LECTURE PUBLIQUE ==========
+                        .requestMatchers(HttpMethod.GET, "/establishments/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/fields/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/test/**").permitAll()
+
+                        // ========== ENDPOINTS PROTÉGÉS ==========
+                        .requestMatchers("/auth/me", "/auth/logout**", "/account/profile").authenticated()
+
+                        // ========== RESTE ==========
+                        .anyRequest().authenticated()
+                )
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                )
                 .build();
     }
 

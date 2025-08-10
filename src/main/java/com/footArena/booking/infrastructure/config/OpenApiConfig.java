@@ -35,7 +35,7 @@ public class OpenApiConfig {
                                 .url("https://opensource.org/licenses/MIT")))
                 .servers(List.of(
                         new Server()
-                                .url("http://localhost:" + serverPort + "/api")
+                                .url("http://localhost:" + serverPort)
                                 .description("Serveur de développement"),
                         new Server()
                                 .url("https://api.footarena.com")
