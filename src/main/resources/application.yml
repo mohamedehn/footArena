@@ -57,7 +57,10 @@ springdoc:
     url: /v3/api-docs
   show-actuator: false
   pathsToMatch: "/**"
-  packagesToScan: com.footArena.booking.api.controllers
+  packagesToScan:
+    - com.footArena.booking.api.controllers
+    - com.footArena.booking.security.controllers
+
 
 # Logs
 logging:
