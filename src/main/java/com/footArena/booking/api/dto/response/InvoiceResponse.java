@@ -1,123 +1,35 @@
-package com.footArena.booking.domain.entities;
-
-import jakarta.persistence.*;
-import org.hibernate.annotations.CreationTimestamp;
+package com.footArena.booking.api.dto.response;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-@Entity
-@Table(name = "invoices")
-public class Invoice {
+public class InvoiceResponse {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
-
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "payment_id", nullable = false)
-    private Payment payment;
-
-    @Column(name = "invoice_number", unique = true, nullable = false)
     private String invoiceNumber;
-
-    @Column(name = "amount_ht", nullable = false, precision = 10, scale = 2)
-    private BigDecimal amountHT; // Hors Taxes
-
-    @Column(name = "tax_rate", nullable = false, precision = 5, scale = 2)
-    private BigDecimal taxRate = BigDecimal.valueOf(20.0); // 20% TVA par défaut
-
-    @Column(name = "tax_amount", nullable = false, precision = 10, scale = 2)
+    private BigDecimal amountHT;
+    private BigDecimal taxRate;
     private BigDecimal taxAmount;
-
-    @Column(name = "amount_ttc", nullable = false, precision = 10, scale = 2)
-    private BigDecimal amountTTC; // Toutes Taxes Comprises
-
-    @Column(name = "status", nullable = false)
-    private String status = "ISSUED"; // ISSUED, PAID, CANCELLED
-
-    @Column(name = "due_date")
+    private BigDecimal amountTTC;
+    private String status;
     private LocalDateTime dueDate;
-
-    @Column(name = "paid_at")
     private LocalDateTime paidAt;
-
-    @Column(name = "description", length = 1000)
     private String description;
-
-    @Column(name = "customer_name", nullable = false)
     private String customerName;
-
-    @Column(name = "customer_email", nullable = false)
     private String customerEmail;
-
-    @Column(name = "customer_address")
     private String customerAddress;
-
-    @Column(name = "establishment_name", nullable = false)
     private String establishmentName;
-
-    @Column(name = "establishment_address", nullable = false)
     private String establishmentAddress;
-
-    @Column(name = "establishment_siret")
     private String establishmentSiret;
-
-    @Column(name = "invoice_file_path")
-    private String invoiceFilePath; // Chemin vers le PDF généré
-
-    @Column(name = "issued_at", nullable = false, updatable = false)
-    @CreationTimestamp
+    private String invoiceFilePath;
     private LocalDateTime issuedAt;
+    private Boolean isPaid;
+    private Boolean isCancelled;
+    private Boolean isOverdue;
+    private PaymentResponse payment;
 
-    public Invoice() {
-    }
-
-    public Invoice(Payment payment, String customerName, String customerEmail,
-                   String establishmentName, String establishmentAddress) {
-        this.payment = payment;
-        this.customerName = customerName;
-        this.customerEmail = customerEmail;
-        this.establishmentName = establishmentName;
-        this.establishmentAddress = establishmentAddress;
-        this.invoiceNumber = generateInvoiceNumber();
-        this.status = "ISSUED";
-        this.dueDate = LocalDateTime.now().plusDays(30);
-
-        calculateAmounts(payment.getAmount());
-    }
-
-    private void calculateAmounts(BigDecimal totalAmount) {
-        this.amountTTC = totalAmount;
-        this.amountHT = totalAmount.divide(BigDecimal.ONE.add(taxRate.divide(BigDecimal.valueOf(100))), 2, BigDecimal.ROUND_HALF_UP);
-        this.taxAmount = amountTTC.subtract(amountHT);
-    }
-
-    public void markAsPaid() {
-        this.status = "PAID";
-        this.paidAt = LocalDateTime.now();
-    }
-
-    public void cancel() {
-        this.status = "CANCELLED";
-    }
-
-    public boolean isPaid() {
-        return "PAID".equals(status);
-    }
-
-    public boolean isCancelled() {
-        return "CANCELLED".equals(status);
-    }
-
-    public boolean isOverdue() {
-        return !isPaid() && LocalDateTime.now().isAfter(dueDate);
-    }
-
-    private String generateInvoiceNumber() {
-        return "INV-" + LocalDateTime.now().getYear() + "-" +
-                String.format("%06d", System.currentTimeMillis() % 1000000);
+    public InvoiceResponse() {
     }
 
     public UUID getId() {
@@ -126,14 +38,6 @@ public class Invoice {
 
     public void setId(UUID id) {
         this.id = id;
-    }
-
-    public Payment getPayment() {
-        return payment;
-    }
-
-    public void setPayment(Payment payment) {
-        this.payment = payment;
     }
 
     public String getInvoiceNumber() {
@@ -270,5 +174,63 @@ public class Invoice {
 
     public void setIssuedAt(LocalDateTime issuedAt) {
         this.issuedAt = issuedAt;
+    }
+
+    public Boolean getIsPaid() {
+        return isPaid;
+    }
+
+    public void setIsPaid(Boolean isPaid) {
+        this.isPaid = isPaid;
+    }
+
+    public Boolean getIsCancelled() {
+        return isCancelled;
+    }
+
+    public void setIsCancelled(Boolean isCancelled) {
+        this.isCancelled = isCancelled;
+    }
+
+    public Boolean getIsOverdue() {
+        return isOverdue;
+    }
+
+    public void setIsOverdue(Boolean isOverdue) {
+        this.isOverdue = isOverdue;
+    }
+
+    public PaymentResponse getPayment() {
+        return payment;
+    }
+
+    public void setPayment(PaymentResponse payment) {
+        this.payment = payment;
+    }
+
+    // Méthodes utilitaires
+    public String getStatusDisplay() {
+        switch (status) {
+            case "ISSUED":
+                return "Émise";
+            case "PAID":
+                return "Payée";
+            case "CANCELLED":
+                return "Annulée";
+            default:
+                return status;
+        }
+    }
+
+    public String getFormattedAmountTTC() {
+        return String.format("%.2f €", amountTTC);
+    }
+
+    public String getFormattedAmountHT() {
+        return String.format("%.2f €", amountHT);
+    }
+
+    public String getFormattedTaxAmount() {
+        return String.format("%.2f €", taxAmount);
     }
 }
