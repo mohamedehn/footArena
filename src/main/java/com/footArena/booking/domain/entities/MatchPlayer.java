@@ -2,41 +2,113 @@ package com.footArena.booking.domain.entities;
 
 import jakarta.persistence.*;
 
-import java.util.UUID;
+import java.time.LocalDateTime;
 
+/**
+ * Entité représentant la participation d'un joueur dans un match
+ * Gère le statut de confirmation et l'appartenance aux équipes
+ */
 @Entity
 @Table(name = "match_players")
 public class MatchPlayer {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "match_id", nullable = false)
     private Match match;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @Column(name = "team", nullable = false)
-    private String team;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "team_id")
+    private Team team;
 
-    public MatchPlayer() {
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private TeamSide teamSide; // HOME ou AWAY
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private PlayerStatus status;
+
+    @Column(name = "is_captain")
+    private boolean isCaptain;
+
+    @Column(name = "position_preference")
+    private String positionPreference; // GK, DEF, MID, ATT
+
+    @Column(name = "skill_level")
+    private Integer skillLevel; // 1-10
+
+    @Column(name = "joined_at")
+    private LocalDateTime joinedAt;
+
+    @Column(name = "confirmed_at")
+    private LocalDateTime confirmedAt;
+
+    @Column(name = "cancelled_at")
+    private LocalDateTime cancelledAt;
+
+    @Column(name = "cancellation_reason")
+    private String cancellationReason;
+
+    // Enums internes
+    public enum PlayerStatus {
+        PENDING,    // En attente de confirmation
+        CONFIRMED,  // Confirmé
+        DECLINED,   // Refusé
+        CANCELLED,  // Annulé
+        SUBSTITUTE  // Remplaçant
     }
 
-    public MatchPlayer(Match match, User user, String team) {
-        this.match = match;
-        this.user = user;
-        this.team = team;
+    public enum TeamSide {
+        HOME,
+        AWAY
     }
 
-    public UUID getId() {
+    public boolean isConfirmed() {
+        return status == PlayerStatus.CONFIRMED;
+    }
+
+    public boolean canPlay() {
+        return status == PlayerStatus.CONFIRMED || status == PlayerStatus.SUBSTITUTE;
+    }
+
+    public void confirm() {
+        this.status = PlayerStatus.CONFIRMED;
+        this.confirmedAt = LocalDateTime.now();
+    }
+
+    public void decline() {
+        this.status = PlayerStatus.DECLINED;
+    }
+
+    public void cancel(String reason) {
+        this.status = PlayerStatus.CANCELLED;
+        this.cancelledAt = LocalDateTime.now();
+        this.cancellationReason = reason;
+    }
+
+    @PrePersist
+    protected void onCreate() {
+        if (joinedAt == null) {
+            joinedAt = LocalDateTime.now();
+        }
+        if (status == null) {
+            status = PlayerStatus.PENDING;
+        }
+    }
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(UUID id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -56,12 +128,84 @@ public class MatchPlayer {
         this.user = user;
     }
 
-    public String getTeam() {
+    public Team getTeam() {
         return team;
     }
 
-    public void setTeam(String team) {
+    public void setTeam(Team team) {
         this.team = team;
+    }
+
+    public TeamSide getTeamSide() {
+        return teamSide;
+    }
+
+    public void setTeamSide(TeamSide teamSide) {
+        this.teamSide = teamSide;
+    }
+
+    public PlayerStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(PlayerStatus status) {
+        this.status = status;
+    }
+
+    public boolean isCaptain() {
+        return isCaptain;
+    }
+
+    public void setCaptain(boolean isCaptain) {
+        this.isCaptain = isCaptain;
+    }
+
+    public String getPositionPreference() {
+        return positionPreference;
+    }
+
+    public void setPositionPreference(String positionPreference) {
+        this.positionPreference = positionPreference;
+    }
+
+    public Integer getSkillLevel() {
+        return skillLevel;
+    }
+
+    public void setSkillLevel(Integer skillLevel) {
+        this.skillLevel = skillLevel;
+    }
+
+    public LocalDateTime getJoinedAt() {
+        return joinedAt;
+    }
+
+    public void setJoinedAt(LocalDateTime joinedAt) {
+        this.joinedAt = joinedAt;
+    }
+
+    public LocalDateTime getConfirmedAt() {
+        return confirmedAt;
+    }
+
+    public void setConfirmedAt(LocalDateTime confirmedAt) {
+        this.confirmedAt = confirmedAt;
+    }
+
+    public LocalDateTime getCancelledAt() {
+        return cancelledAt;
+    }
+
+    public void setCancelledAt(LocalDateTime cancelledAt) {
+        this.cancelledAt = cancelledAt;
+    }
+
+    public String getCancellationReason() {
+        return cancellationReason;
+    }
+
+    public void setCancellationReason(String cancellationReason) {
+        this.cancellationReason = cancellationReason;
     }
 
 }
