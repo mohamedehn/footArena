@@ -28,8 +28,13 @@ public class TeamMember {
     @Column(name = "is_captain", nullable = false)
     private Boolean isCaptain = false;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
-    private String status = "ACTIVE"; // ACTIVE, INVITED, INACTIVE
+    private MemberStatus status = MemberStatus.ACTIVE;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role", nullable = false)
+    private TeamRole role = TeamRole.MEMBER;
 
     @Column(name = "joined_at", nullable = false, updatable = false)
     @CreationTimestamp
@@ -41,7 +46,17 @@ public class TeamMember {
     public TeamMember(Team team, User user) {
         this.team = team;
         this.user = user;
-        this.status = "ACTIVE";
+        this.status = MemberStatus.ACTIVE;
+        this.role = TeamRole.MEMBER;
+    }
+
+    // Enums
+    public enum MemberStatus {
+        ACTIVE, INVITED, INACTIVE, SUSPENDED
+    }
+
+    public enum TeamRole {
+        CAPTAIN, VICE_CAPTAIN, MEMBER
     }
 
     public UUID getId() {
@@ -84,12 +99,20 @@ public class TeamMember {
         this.isCaptain = isCaptain;
     }
 
-    public String getStatus() {
+    public MemberStatus getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(MemberStatus status) {
         this.status = status;
+    }
+
+    public TeamRole getRole() {
+        return role;
+    }
+
+    public void setRole(TeamRole role) {
+        this.role = role;
     }
 
     public LocalDateTime getJoinedAt() {

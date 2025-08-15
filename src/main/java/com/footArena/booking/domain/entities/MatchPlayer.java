@@ -3,6 +3,7 @@ package com.footArena.booking.domain.entities;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 /**
  * Entité représentant la participation d'un joueur dans un match
@@ -13,8 +14,8 @@ import java.time.LocalDateTime;
 public class MatchPlayer {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "match_id", nullable = false)
@@ -24,9 +25,8 @@ public class MatchPlayer {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "team_id")
-    private Team team;
+    @Column(name = "team_name")
+    private String teamName; // "TEAM_A" ou "TEAM_B"
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -56,6 +56,19 @@ public class MatchPlayer {
 
     @Column(name = "cancellation_reason")
     private String cancellationReason;
+
+    // Constructeurs
+    public MatchPlayer() {
+    }
+
+    public MatchPlayer(Match match, User user, String teamName) {
+        this.match = match;
+        this.user = user;
+        this.teamName = teamName;
+        this.joinedAt = LocalDateTime.now();
+        this.status = PlayerStatus.PENDING;
+        this.teamSide = "TEAM_A".equals(teamName) ? TeamSide.HOME : TeamSide.AWAY;
+    }
 
     // Enums internes
     public enum PlayerStatus {
@@ -104,11 +117,11 @@ public class MatchPlayer {
         }
     }
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
@@ -128,12 +141,12 @@ public class MatchPlayer {
         this.user = user;
     }
 
-    public Team getTeam() {
-        return team;
+    public String getTeam() {
+        return teamName;
     }
 
-    public void setTeam(Team team) {
-        this.team = team;
+    public void setTeam(String teamName) {
+        this.teamName = teamName;
     }
 
     public TeamSide getTeamSide() {

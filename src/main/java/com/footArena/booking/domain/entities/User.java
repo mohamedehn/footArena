@@ -1,6 +1,7 @@
 package com.footArena.booking.domain.entities;
 
 import com.footArena.booking.domain.enums.Role;
+import com.footArena.booking.domain.enums.SkillLevel;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -77,7 +78,7 @@ public class User implements UserDetails {
     // ===== Champs Matchmaking =====
 
     @Column(name = "skill_level")
-    private Integer skillLevel;
+    private SkillLevel skillLevel;
 
     @Column(name = "preferred_position")
     private String preferredPosition;
@@ -134,8 +135,9 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "captain", fetch = FetchType.LAZY)
     private Set<Team> captainedTeams = new HashSet<>();
 
-    @ManyToMany(mappedBy = "members", fetch = FetchType.LAZY)
-    private Set<Team> teams = new HashSet<>();
+    // Relation via TeamMember
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private Set<TeamMember> teamMemberships = new HashSet<>();
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private Set<Booking> bookings = new HashSet<>();
@@ -367,11 +369,11 @@ public class User implements UserDetails {
         this.lockedUntil = lockedUntil;
     }
 
-    public Integer getSkillLevel() {
+    public SkillLevel getSkillLevel() {
         return skillLevel;
     }
 
-    public void setSkillLevel(Integer skillLevel) {
+    public void setSkillLevel(SkillLevel skillLevel) {
         this.skillLevel = skillLevel;
     }
 
@@ -519,12 +521,12 @@ public class User implements UserDetails {
         this.captainedTeams = captainedTeams;
     }
 
-    public Set<Team> getTeams() {
-        return teams;
+    public Set<TeamMember> getTeamMemberships() {
+        return teamMemberships;
     }
 
-    public void setTeams(Set<Team> teams) {
-        this.teams = teams;
+    public void setTeamMemberships(Set<TeamMember> teamMemberships) {
+        this.teamMemberships = teamMemberships;
     }
 
     public Set<Booking> getBookings() {

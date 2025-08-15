@@ -50,7 +50,7 @@ public class AccountService {
         user.setEmail(email.toLowerCase());
         user.setPassword(passwordEncoder.encode(password));
         user.setRole(role != null ? role : Role.PLAYER);
-        user.setEnabled(true); // En production, false jusqu'à vérification email
+        user.setActive(true); // En production, false jusqu'à vérification email
 
         user.setEmailVerificationToken(generateVerificationToken());
 
@@ -80,7 +80,7 @@ public class AccountService {
         }
 
         user.verifyEmail();
-        user.setEnabled(true);
+        user.setActive(true);
         userRepository.save(user);
 
         logger.info("Account activated successfully for user: {}", user.getEmail());
@@ -118,7 +118,7 @@ public class AccountService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new BusinessValidationException("User not found"));
 
-        user.setEnabled(false);
+        user.setActive(false);
         userRepository.save(user);
 
         // Déconnecter de tous les appareils
